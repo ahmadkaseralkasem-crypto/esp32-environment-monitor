@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Live temperature and humidity dashboard for Weather Cloud Monitor.">
+    <title>Weather Cloud Monitor</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+</head>
+<body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <div class="app-shell">
+        <header class="site-header">
+            <a class="brand" href="/" aria-label="Weather Cloud Monitor home">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img">
+                        <path d="M7.4 18.2h9.2a4.2 4.2 0 0 0 .5-8.37A5.5 5.5 0 0 0 6.72 8.2 5 5 0 0 0 7.4 18.2Z"/>
+                        <path d="M8.4 12.2h7.2M10 9.5l-1.6 2.7L10 15M14 9.5l1.6 2.7L14 15"/>
+                    </svg>
+                </span>
+                <span>
+                    <strong>Weather Cloud</strong>
+                    <small>Monitor</small>
+                </span>
+            </a>
+
+            <div class="header-actions">
+                <span class="connection-status" id="connection-status" role="status">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    <span id="connection-label">Connecting</span>
+                </span>
+                <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch color theme" aria-pressed="false">
+                    <svg class="moon-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.2 15.5A8.5 8.5 0 0 1 8.5 3.8 8.5 8.5 0 1 0 20.2 15.5Z"/>
+                    </svg>
+                    <svg class="sun-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="dashboard-title">
+                <div>
+                    <p class="eyebrow"><span aria-hidden="true"></span> Live weather intelligence</p>
+                    <h1 id="dashboard-title">Weather, made clear.</h1>
+                    <p class="hero-copy">Real-time temperature and humidity from your cloud data pipeline.</p>
+                </div>
+                <div class="hero-meta">
+                    <p id="current-date">—</p>
+                    <button class="refresh-button" id="refresh-button" type="button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 11a8.1 8.1 0 1 0-2.3 5.7M20 4v7h-7"/>
+                        </svg>
+                        Refresh data
+                    </button>
+                </div>
+            </section>
+
+            <section class="metrics-grid" aria-label="Current weather summary">
+                <article class="metric-card temperature-card">
+                    <div class="metric-heading">
+                        <div>
+                            <p class="metric-label">Temperature</p>
+                            <p class="metric-time" id="temperature-time">Waiting for a reading</p>
+                        </div>
+                        <span class="metric-icon temperature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M14 14.76V5a4 4 0 0 0-8 0v9.76a6 6 0 1 0 8 0Z"/>
+                                <path d="M10 9v8M8 17h4"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="metric-value-row">
+                        <strong class="metric-value" id="current-temperature">--</strong>
+                        <span class="metric-unit">°C</span>
+                    </div>
+                    <p class="trend" id="temperature-trend">Collect data to see the trend</p>
+                </article>
+
+                <article class="metric-card humidity-card">
+                    <div class="metric-heading">
+                        <div>
+                            <p class="metric-label">Humidity</p>
+                            <p class="metric-time">Relative humidity</p>
+                        </div>
+                        <span class="metric-icon humidity-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2.8S5.5 10 5.5 15.1a6.5 6.5 0 0 0 13 0C18.5 10 12 2.8 12 2.8Z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="humidity-layout">
+                        <div class="humidity-gauge" id="humidity-gauge" style="--gauge-value: 0" role="img" aria-label="Humidity unavailable">
+                            <div class="gauge-center">
+                                <strong id="current-humidity">--</strong>
+                                <span>%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="humidity-description" id="humidity-description">Waiting for data</p>
+                            <p class="metric-time" id="humidity-trend">No trend available</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="metric-card summary-card">
+                    <div class="metric-heading">
+                        <div>
+                            <p class="metric-label">Last 24 hours</p>
+                            <p class="metric-time">Observed range</p>
+                        </div>
+                        <span class="metric-icon summary-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <dl class="summary-list">
+                        <div>
+                            <dt>High</dt>
+                            <dd id="high-temperature">-- °C</dd>
+                        </div>
+                        <div>
+                            <dt>Low</dt>
+                            <dd id="low-temperature">-- °C</dd>
+                        </div>
+                        <div>
+                            <dt>Avg. humidity</dt>
+                            <dd id="average-humidity">-- %</dd>
+                        </div>
+                        <div>
+                            <dt>Readings</dt>
+                            <dd id="reading-count">0</dd>
+                        </div>
+                    </dl>
+                </article>
+            </section>
+
+            <section class="dashboard-grid">
+                <article class="data-panel chart-panel" aria-labelledby="history-title">
+                    <div class="panel-header">
+                        <div>
+                            <p class="section-kicker">History</p>
+                            <h2 id="history-title">Weather timeline</h2>
+                        </div>
+                        <label class="range-control" for="range-select">
+                            <span>Show</span>
+                            <select id="range-select">
+                                <option value="12">Latest 12</option>
+                                <option value="24" selected>Latest 24</option>
+                                <option value="96">Latest 96</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="chart-legend" aria-label="Chart legend">
+                        <span><i class="legend-temperature" aria-hidden="true"></i> Temperature °C</span>
+                        <span><i class="legend-humidity" aria-hidden="true"></i> Humidity %</span>
+                    </div>
+
+                    <div class="chart-wrap">
+                        <svg id="weather-chart" viewBox="0 0 900 330" role="img" aria-labelledby="chart-title chart-description">
+                            <title id="chart-title">Temperature and humidity history</title>
+                            <desc id="chart-description">The chart will appear after weather readings are collected.</desc>
+                        </svg>
+                        <div class="chart-tooltip" id="chart-tooltip" role="tooltip" hidden></div>
+                    </div>
+                </article>
+
+                <aside class="data-panel activity-panel" aria-labelledby="activity-title">
+                    <div class="panel-header">
+                        <div>
+                            <p class="section-kicker">Pipeline</p>
+                            <h2 id="activity-title">Data activity</h2>
+                        </div>
+                        <span class="source-badge" id="source-badge">No source</span>
+                    </div>
+
+                    <div class="pipeline" aria-label="Weather data pipeline">
+                        <div class="pipeline-step is-active">
+                            <span class="pipeline-number">01</span>
+                            <div>
+                                <strong>Weather source</strong>
+                                <small>Open-Meteo observation</small>
+                            </div>
+                        </div>
+                        <span class="pipeline-line" aria-hidden="true"></span>
+                        <div class="pipeline-step is-active">
+                            <span class="pipeline-number">02</span>
+                            <div>
+                                <strong>FastAPI middleware</strong>
+                                <small>Validation and delivery</small>
+                            </div>
+                        </div>
+                        <span class="pipeline-line" aria-hidden="true"></span>
+                        <div class="pipeline-step" id="storage-step">
+                            <span class="pipeline-number">03</span>
+                            <div>
+                                <strong id="storage-name">Storage</strong>
+                                <small id="storage-description">Checking connection</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="last-update">
+                        <span aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="M12 7v5l3 2"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <small>Last observation</small>
+                            <strong id="last-observation">No data yet</strong>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="data-panel readings-panel" aria-labelledby="readings-title">
+                <div class="panel-header">
+                    <div>
+                        <p class="section-kicker">Details</p>
+                        <h2 id="readings-title">Recent readings</h2>
+                    </div>
+                    <a class="api-link" href="/docs">Explore API
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                    </a>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Observed</th>
+                                <th scope="col">Temperature</th>
+                                <th scope="col">Humidity</th>
+                                <th scope="col">Source</th>
+                            </tr>
+                        </thead>
+                        <tbody id="readings-body">
+                            <tr><td colspan="4" class="empty-table">Loading weather readings…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Weather Cloud Monitor</p>
+            <p>Open-Meteo → FastAPI → Cloud storage</p>
+        </footer>
+    </div>
+
+    <div class="toast" id="error-toast" role="alert" hidden>
+        <strong>Could not load weather data</strong>
+        <span id="error-message">Check that the middleware is running.</span>
+    </div>
+</body>
+</html>

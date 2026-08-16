@@ -1,0 +1,1097 @@
+:root {
+    color-scheme: dark;
+    --page: #08111f;
+    --page-deep: #050b14;
+    --surface: rgba(15, 29, 47, 0.78);
+    --surface-strong: #12243a;
+    --surface-soft: rgba(255, 255, 255, 0.045);
+    --border: rgba(162, 192, 218, 0.15);
+    --border-strong: rgba(162, 192, 218, 0.28);
+    --text: #f4f8fb;
+    --muted: #8fa5b8;
+    --muted-strong: #b9c8d5;
+    --temperature: #ff9d4d;
+    --temperature-soft: rgba(255, 157, 77, 0.16);
+    --humidity: #45d4e8;
+    --humidity-soft: rgba(69, 212, 232, 0.14);
+    --success: #63e6a6;
+    --success-soft: rgba(99, 230, 166, 0.13);
+    --danger: #ff7b88;
+    --shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    --radius-large: 26px;
+    --radius-medium: 18px;
+}
+
+html[data-theme="light"] {
+    color-scheme: light;
+    --page: #eef5f8;
+    --page-deep: #e5eef3;
+    --surface: rgba(255, 255, 255, 0.82);
+    --surface-strong: #ffffff;
+    --surface-soft: rgba(13, 43, 67, 0.05);
+    --border: rgba(25, 64, 92, 0.12);
+    --border-strong: rgba(25, 64, 92, 0.22);
+    --text: #10283c;
+    --muted: #61788a;
+    --muted-strong: #3f5b70;
+    --temperature: #e8711b;
+    --temperature-soft: rgba(232, 113, 27, 0.13);
+    --humidity: #008fa8;
+    --humidity-soft: rgba(0, 143, 168, 0.11);
+    --success: #13895b;
+    --success-soft: rgba(19, 137, 91, 0.11);
+    --danger: #c43d4c;
+    --shadow: 0 22px 55px rgba(30, 64, 88, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    background: var(--page-deep);
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    background:
+        radial-gradient(circle at 13% 4%, rgba(47, 171, 188, 0.14), transparent 32rem),
+        radial-gradient(circle at 89% 17%, rgba(255, 143, 70, 0.1), transparent 27rem),
+        linear-gradient(150deg, var(--page), var(--page-deep));
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+select {
+    font: inherit;
+}
+
+button,
+a,
+select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--humidity) 55%, transparent);
+    outline-offset: 3px;
+}
+
+svg {
+    display: block;
+}
+
+.ambient {
+    position: fixed;
+    z-index: 0;
+    border-radius: 999px;
+    filter: blur(90px);
+    pointer-events: none;
+    opacity: 0.22;
+}
+
+.ambient-one {
+    top: 28rem;
+    left: -12rem;
+    width: 26rem;
+    height: 26rem;
+    background: var(--humidity);
+}
+
+.ambient-two {
+    right: -13rem;
+    bottom: 10rem;
+    width: 28rem;
+    height: 28rem;
+    background: var(--temperature);
+    opacity: 0.12;
+}
+
+.app-shell {
+    position: relative;
+    z-index: 1;
+    width: min(1240px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 88px;
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    display: inline-flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.brand-mark {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    background: linear-gradient(145deg, var(--humidity-soft), var(--temperature-soft));
+}
+
+.brand-mark svg {
+    width: 25px;
+    fill: none;
+    stroke: var(--text);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.65;
+}
+
+.brand strong,
+.brand small {
+    display: block;
+}
+
+.brand strong {
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+}
+
+.brand small {
+    margin-top: 1px;
+    color: var(--muted);
+    font-size: 0.76rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.connection-status {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--muted-strong);
+    font-size: 0.8rem;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--muted) 15%, transparent);
+}
+
+.connection-status.is-online .status-dot {
+    background: var(--success);
+    box-shadow: 0 0 0 4px var(--success-soft);
+}
+
+.connection-status.is-error .status-dot {
+    background: var(--danger);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 15%, transparent);
+}
+
+.icon-button,
+.refresh-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.icon-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface-soft);
+}
+
+.icon-button:hover,
+.refresh-button:hover {
+    border-color: var(--border-strong);
+    background: color-mix(in srgb, var(--surface-strong) 80%, var(--humidity-soft));
+}
+
+.icon-button svg,
+.refresh-button svg,
+.api-link svg {
+    width: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.sun-icon {
+    display: none;
+}
+
+html[data-theme="light"] .moon-icon {
+    display: none;
+}
+
+html[data-theme="light"] .sun-icon {
+    display: block;
+}
+
+.hero {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 70px 0 42px;
+}
+
+.eyebrow,
+.section-kicker,
+.metric-label,
+.metric-time,
+.hero-copy,
+.hero-meta p,
+footer p {
+    margin: 0;
+}
+
+.eyebrow {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    color: var(--humidity);
+    font-size: 0.76rem;
+    font-weight: 650;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.eyebrow span {
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+}
+
+h1,
+h2 {
+    margin: 0;
+    font-weight: 620;
+    letter-spacing: -0.045em;
+}
+
+h1 {
+    max-width: 780px;
+    margin-top: 14px;
+    font-size: clamp(2.6rem, 6vw, 5.2rem);
+    line-height: 0.98;
+}
+
+.hero-copy {
+    max-width: 580px;
+    margin-top: 22px;
+    color: var(--muted-strong);
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    line-height: 1.65;
+}
+
+.hero-meta {
+    display: grid;
+    flex: 0 0 auto;
+    gap: 16px;
+    justify-items: end;
+}
+
+.hero-meta p {
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.refresh-button {
+    gap: 9px;
+    padding: 11px 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    font-weight: 620;
+}
+
+.refresh-button.is-loading svg {
+    animation: rotate 0.85s linear infinite;
+}
+
+@keyframes rotate {
+    to { transform: rotate(360deg); }
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr 1.2fr;
+    gap: 16px;
+}
+
+.metric-card,
+.data-panel {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(22px);
+}
+
+.metric-card {
+    min-width: 0;
+    padding: 24px;
+    overflow: hidden;
+    border-radius: var(--radius-large);
+}
+
+.temperature-card {
+    background:
+        radial-gradient(circle at 100% 0, var(--temperature-soft), transparent 55%),
+        var(--surface);
+}
+
+.humidity-card {
+    background:
+        radial-gradient(circle at 100% 0, var(--humidity-soft), transparent 55%),
+        var(--surface);
+}
+
+.metric-heading,
+.panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.metric-label {
+    color: var(--text);
+    font-size: 0.92rem;
+    font-weight: 620;
+}
+
+.metric-time {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 0.76rem;
+}
+
+.metric-icon {
+    display: grid;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 13px;
+}
+
+.metric-icon svg {
+    width: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+}
+
+.temperature-icon {
+    background: var(--temperature-soft);
+    color: var(--temperature);
+}
+
+.humidity-icon {
+    background: var(--humidity-soft);
+    color: var(--humidity);
+}
+
+.summary-icon {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.metric-value-row {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 25px;
+}
+
+.metric-value {
+    font-size: clamp(3.2rem, 6vw, 4.8rem);
+    font-weight: 570;
+    letter-spacing: -0.075em;
+    line-height: 0.95;
+}
+
+.metric-unit {
+    margin: 7px 0 0 10px;
+    color: var(--muted-strong);
+    font-size: 1.2rem;
+}
+
+.trend {
+    margin: 22px 0 0;
+    color: var(--muted-strong);
+    font-size: 0.78rem;
+}
+
+.trend.is-up {
+    color: var(--temperature);
+}
+
+.trend.is-down {
+    color: var(--humidity);
+}
+
+.humidity-layout {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.humidity-gauge {
+    --gauge-value: 0;
+    display: grid;
+    flex: 0 0 auto;
+    width: 106px;
+    height: 106px;
+    place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(var(--humidity) calc(var(--gauge-value) * 1%), var(--surface-soft) 0);
+    box-shadow: inset 0 0 24px color-mix(in srgb, var(--humidity) 9%, transparent);
+}
+
+.gauge-center {
+    display: flex;
+    width: 78px;
+    height: 78px;
+    align-items: baseline;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--surface-strong);
+    padding-top: 25px;
+}
+
+.gauge-center strong {
+    font-size: 1.55rem;
+    font-weight: 620;
+    letter-spacing: -0.04em;
+}
+
+.gauge-center span {
+    margin-left: 2px;
+    color: var(--muted);
+    font-size: 0.74rem;
+}
+
+.humidity-description {
+    margin: 0;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 620;
+}
+
+.summary-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 20px 0 0;
+}
+
+.summary-list div {
+    padding: 14px;
+    border-radius: 15px;
+    background: var(--surface-soft);
+}
+
+.summary-list dt {
+    color: var(--muted);
+    font-size: 0.72rem;
+}
+
+.summary-list dd {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 1.05rem;
+    font-weight: 620;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.75fr) minmax(280px, 0.75fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.data-panel {
+    min-width: 0;
+    border-radius: var(--radius-large);
+}
+
+.chart-panel,
+.activity-panel,
+.readings-panel {
+    padding: 26px;
+}
+
+.section-kicker {
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+h2 {
+    margin-top: 5px;
+    font-size: 1.25rem;
+}
+
+.range-control {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+.range-control select {
+    padding: 8px 30px 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-strong);
+    color: var(--text);
+}
+
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 28px;
+    color: var(--muted-strong);
+    font-size: 0.74rem;
+}
+
+.chart-legend span {
+    display: inline-flex;
+    gap: 7px;
+    align-items: center;
+}
+
+.chart-legend i {
+    width: 18px;
+    height: 3px;
+    border-radius: 999px;
+}
+
+.legend-temperature {
+    background: var(--temperature);
+}
+
+.legend-humidity {
+    background: var(--humidity);
+}
+
+.chart-wrap {
+    position: relative;
+    min-height: 280px;
+    margin-top: 6px;
+}
+
+#weather-chart {
+    width: 100%;
+    height: auto;
+    min-height: 280px;
+    overflow: visible;
+}
+
+.chart-grid {
+    stroke: var(--border);
+    stroke-width: 1;
+}
+
+.chart-axis-label,
+.chart-empty {
+    fill: var(--muted);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.chart-empty {
+    font-size: 15px;
+}
+
+.temperature-line,
+.humidity-line {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+}
+
+.temperature-line {
+    stroke: var(--temperature);
+}
+
+.humidity-line {
+    stroke: var(--humidity);
+}
+
+.temperature-area {
+    fill: url(#temperature-gradient);
+}
+
+.chart-point {
+    stroke: var(--surface-strong);
+    stroke-width: 3;
+}
+
+.temperature-point {
+    fill: var(--temperature);
+}
+
+.humidity-point {
+    fill: var(--humidity);
+}
+
+.chart-hit {
+    fill: transparent;
+    cursor: crosshair;
+}
+
+.chart-guide {
+    stroke: var(--border-strong);
+    stroke-dasharray: 4 5;
+    stroke-width: 1;
+    pointer-events: none;
+}
+
+.chart-tooltip {
+    position: absolute;
+    z-index: 5;
+    width: max-content;
+    max-width: 220px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: var(--surface-strong);
+    box-shadow: var(--shadow);
+    color: var(--text);
+    font-size: 0.74rem;
+    line-height: 1.55;
+    pointer-events: none;
+}
+
+.chart-tooltip strong,
+.chart-tooltip span {
+    display: block;
+}
+
+.chart-tooltip span {
+    color: var(--muted-strong);
+}
+
+.source-badge {
+    display: inline-flex;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: var(--humidity-soft);
+    color: var(--humidity);
+    font-size: 0.7rem;
+    font-weight: 650;
+    text-transform: capitalize;
+}
+
+.pipeline {
+    margin-top: 30px;
+}
+
+.pipeline-step {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    opacity: 0.55;
+}
+
+.pipeline-step.is-active {
+    opacity: 1;
+}
+
+.pipeline-number {
+    display: grid;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 1px solid var(--border-strong);
+    border-radius: 11px;
+    color: var(--muted-strong);
+    font-size: 0.65rem;
+}
+
+.pipeline-step.is-active .pipeline-number {
+    border-color: color-mix(in srgb, var(--success) 40%, transparent);
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.pipeline-step strong,
+.pipeline-step small {
+    display: block;
+}
+
+.pipeline-step strong {
+    font-size: 0.83rem;
+    font-weight: 620;
+}
+
+.pipeline-step small {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 0.7rem;
+}
+
+.pipeline-line {
+    display: block;
+    width: 1px;
+    height: 24px;
+    margin-left: 17px;
+    background: var(--border-strong);
+}
+
+.last-update {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 16px;
+    background: var(--surface-soft);
+}
+
+.last-update > span {
+    display: grid;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 11px;
+    background: var(--temperature-soft);
+    color: var(--temperature);
+}
+
+.last-update svg {
+    width: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+}
+
+.last-update small,
+.last-update strong {
+    display: block;
+}
+
+.last-update small {
+    color: var(--muted);
+    font-size: 0.68rem;
+}
+
+.last-update strong {
+    margin-top: 4px;
+    font-size: 0.78rem;
+    font-weight: 620;
+}
+
+.readings-panel {
+    margin-top: 16px;
+}
+
+.api-link {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    color: var(--humidity);
+    font-size: 0.78rem;
+    font-weight: 620;
+    text-decoration: none;
+}
+
+.api-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.api-link svg {
+    width: 15px;
+}
+
+.table-wrap {
+    margin-top: 22px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th,
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+th {
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 620;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+td {
+    color: var(--muted-strong);
+    font-size: 0.8rem;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+tbody tr:hover td {
+    background: var(--surface-soft);
+}
+
+.table-temperature,
+.table-humidity {
+    font-weight: 650;
+}
+
+.table-temperature {
+    color: var(--temperature);
+}
+
+.table-humidity {
+    color: var(--humidity);
+}
+
+.table-source {
+    display: inline-flex;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--muted-strong);
+    text-transform: capitalize;
+}
+
+.empty-table {
+    padding: 38px 12px;
+    color: var(--muted);
+    text-align: center;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 30px 2px 42px;
+    color: var(--muted);
+    font-size: 0.72rem;
+}
+
+.toast {
+    position: fixed;
+    z-index: 20;
+    right: 22px;
+    bottom: 22px;
+    max-width: min(380px, calc(100% - 44px));
+    padding: 15px 17px;
+    border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border));
+    border-radius: 14px;
+    background: var(--surface-strong);
+    box-shadow: var(--shadow);
+}
+
+.toast strong,
+.toast span {
+    display: block;
+}
+
+.toast strong {
+    color: var(--danger);
+    font-size: 0.82rem;
+}
+
+.toast span {
+    margin-top: 4px;
+    color: var(--muted-strong);
+    font-size: 0.74rem;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 980px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summary-card {
+        grid-column: 1 / -1;
+    }
+
+    .summary-list {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 34px;
+    }
+
+    .activity-panel .panel-header {
+        grid-column: 1 / -1;
+    }
+
+    .pipeline,
+    .last-update {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 680px) {
+    .app-shell {
+        width: min(100% - 24px, 1240px);
+    }
+
+    .site-header {
+        min-height: 74px;
+    }
+
+    .connection-status {
+        padding: 8px 10px;
+    }
+
+    #connection-label {
+        display: none;
+    }
+
+    .hero {
+        display: block;
+        padding: 48px 0 30px;
+    }
+
+    .hero-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 28px;
+    }
+
+    .metrics-grid,
+    .summary-list,
+    .activity-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        grid-column: auto;
+    }
+
+    .summary-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .activity-panel .panel-header {
+        grid-column: auto;
+    }
+
+    .metric-card,
+    .chart-panel,
+    .activity-panel,
+    .readings-panel {
+        padding: 20px;
+    }
+
+    .chart-panel .panel-header {
+        align-items: center;
+    }
+
+    .range-control > span {
+        display: none;
+    }
+
+    .chart-wrap,
+    #weather-chart {
+        min-height: 240px;
+    }
+
+    footer {
+        display: block;
+        text-align: center;
+    }
+
+    footer p + p {
+        margin-top: 6px;
+    }
+}
+
+@media (max-width: 390px) {
+    .brand small {
+        display: none;
+    }
+
+    .hero-meta p {
+        display: none;
+    }
+
+    .hero-meta {
+        justify-content: flex-start;
+    }
+
+    .humidity-layout {
+        gap: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,14 +1,20 @@
 """FastAPI middleware that validates readings and sends them to storage."""
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 import secrets
 from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Query, Request, status
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .models import StoredWeatherReading, WeatherReading
 from .storage import ReadingStorage, StorageError, create_storage
+
+
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 
 
 @asynccontextmanager
@@ -25,6 +31,7 @@ app = FastAPI(
     description="Middleware between the weather collector and local or Supabase storage.",
     lifespan=lifespan,
 )
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 def get_storage(request: Request) -> ReadingStorage:
@@ -41,10 +48,16 @@ def verify_api_key(request: Request) -> None:
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False, response_class=FileResponse)
+def dashboard() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/api")
 def application_info() -> dict[str, str]:
     return {
         "application": "weather-cloud-monitor",
+        "dashboard": "/",
         "documentation": "/docs",
         "health": "/health",
     }
@@ -76,7 +89,6 @@ def list_readings(
     request: Request,
     limit: Annotated[int, Query(ge=1, le=1000)] = 100,
 ) -> list[StoredWeatherReading]:
-    verify_api_key(request)
     try:
         return get_storage(request).recent(limit)
     except StorageError as error:

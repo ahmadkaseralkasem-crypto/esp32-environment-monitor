@@ -1,8 +1,9 @@
 # Weather Cloud Monitor
 
-A Python application that collects current temperature and humidity from
-[Open-Meteo](https://open-meteo.com/en/docs), sends the reading through a
-FastAPI middleware service, and stores it in local SQLite or Supabase.
+A Python application with a responsive web dashboard that collects current
+temperature and humidity from [Open-Meteo](https://open-meteo.com/en/docs),
+sends the reading through a FastAPI middleware service, and stores it in local
+SQLite or Supabase.
 
 ```text
 Open-Meteo -> collector -> FastAPI middleware -> SQLite or Supabase -> dashboard later
@@ -48,6 +49,10 @@ weather-cloud-monitor/
 |   |-- config.py       Environment configuration
 |   |-- models.py       Validation rules for readings
 |   `-- storage.py      SQLite and Supabase storage
+|-- static/
+|   |-- index.html      Weather dashboard structure
+|   |-- styles.css      Responsive dashboard design
+|   `-- app.js          Live data, charts, and interactions
 |-- collect_weather.py  Starts one collector run
 |-- run_middleware.py   Starts the middleware server
 |-- supabase/schema.sql Creates the cloud table
@@ -88,6 +93,7 @@ stores it in `data/weather_readings.db`.
 
 Open these addresses in a browser:
 
+- `http://127.0.0.1:8000/` - live weather dashboard.
 - `http://127.0.0.1:8000/docs` - interactive API page.
 - `http://127.0.0.1:8000/api/readings` - stored readings as JSON.
 - `http://127.0.0.1:8000/health` - middleware status.
@@ -142,8 +148,10 @@ secret keys provide elevated database access and belong only in backend
 environment variables.
 
 Set the same `MIDDLEWARE_API_KEY` in the collector and deployed middleware
-environments. Requests to `/api/readings` must then include that key. Leaving it
-empty is convenient for local development but should not be used on a public server.
+environments. Write requests to `POST /api/readings` must then include that key.
+The dashboard uses the read-only `GET /api/readings` endpoint and never receives
+the secret. Leaving the key empty is convenient for local development but should
+not be used on a public server.
 
 ## Visual Studio Code tasks and debugging
 
