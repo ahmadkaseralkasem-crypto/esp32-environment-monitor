@@ -1,63 +1,28 @@
-# Prerequisites
-*.d
+# Python environments and generated files
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
 
-# Linker output
-*.ilk
-*.map
-*.exp
+# Local data
+data/
+*.db
+*.sqlite3
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
-
-# debug information files
-*.dwo
-
-# ESP-IDF generated files
+# Packaging and editor files
 build/
 build-*/
-sdkconfig
-sdkconfig.old
-dependencies.lock
+dist/
+*.egg-info/
+.DS_Store
+
+# Obsolete generated data left only on this computer
 managed_components/
+sdkconfig

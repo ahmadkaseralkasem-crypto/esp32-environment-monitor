@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug middleware",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/run_middleware.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "serverReadyAction": {
+                "pattern": "Uvicorn running on (https?://[^ ]+)",
+                "uriFormat": "%s/docs",
+                "action": "openExternally"
+            }
+        },
+        {
+            "name": "Debug weather collector",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/collect_weather.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
