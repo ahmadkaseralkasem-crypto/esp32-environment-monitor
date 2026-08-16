@@ -217,6 +217,68 @@ What these commands do:
 
 GitHub might open a browser and ask you to sign in. Complete the sign-in process if prompted. After the push finishes, refresh the repository page on GitHub and open the new `docs` folder to confirm that `GitHub_Clone_Guide.md` is present.
 
+### Troubleshooting: Git reports dubious ownership
+
+Git might display an error similar to:
+
+```text
+fatal: detected dubious ownership in repository
+```
+
+This computer encountered the error because Codex created the cloned folder with its sandbox account, while PowerShell was running as the normal Windows account. If the repository path is trusted, register only that exact folder as safe:
+
+```powershell
+git config --global --add safe.directory "C:/Users/aal40/Documents/Codex/2026-08-16/i/esp32-environment-monitor"
+```
+
+**Why:** Git blocks repositories owned by a different operating-system account as a security precaution. This command confirms that this specific repository is trusted. Do not use `safe.directory "*"`, because that would trust every repository on the computer.
+
+After adding the safe-directory entry, retry:
+
+```powershell
+git status
+git add docs/GitHub_Clone_Guide.md
+```
+
+### Troubleshooting: GitHub uses the wrong account
+
+The push might fail with a message similar to:
+
+```text
+remote: Permission to ahmadkaseralkasem-crypto/esp32-environment-monitor.git denied to asd-as.
+fatal: unable to access the repository: The requested URL returned error: 403
+```
+
+This means Git Credential Manager is using credentials cached for `asd-as`, which does not have permission to push to the repository owned by `ahmadkaseralkasem-crypto`.
+
+List the GitHub accounts known to Git Credential Manager:
+
+```powershell
+git credential-manager github list
+```
+
+Remove the incorrect cached account:
+
+```powershell
+git credential-manager github logout asd-as
+```
+
+Authenticate with the repository owner's account:
+
+```powershell
+git credential-manager github login --username ahmadkaseralkasem-crypto --browser --force
+```
+
+**Why:** These commands remove the account that Git was using incorrectly and start browser authentication for the GitHub account that owns the repository. In the browser, confirm that the signed-in account is `ahmadkaseralkasem-crypto` and approve the authorization request.
+
+Return to PowerShell and retry the upload:
+
+```powershell
+git push origin main
+```
+
+If the commit was already created successfully, do not repeat `git add` or `git commit`; only retry `git push origin main`.
+
 ## Basic workflow after cloning
 
 After creating or editing files, the usual Git workflow is:
