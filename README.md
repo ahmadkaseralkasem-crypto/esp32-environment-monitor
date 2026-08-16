@@ -10,6 +10,34 @@ Open-Meteo -> collector -> FastAPI middleware -> SQLite or Supabase -> dashboard
 
 The application runs on a computer or a cloud server; no special hardware is required.
 
+## Run inside GitHub Codespaces
+
+GitHub Codespaces runs the project in a browser-based Visual Studio Code
+environment. No local Python installation is required.
+
+1. Open this repository on GitHub.
+2. Select **Code**, then **Codespaces**.
+3. Select **Create codespace on main**.
+4. Wait for the terminal setup to install `requirements.txt` automatically.
+5. In the Codespaces terminal, start the middleware:
+
+```bash
+python run_middleware.py
+```
+
+Port `8000` opens in a new browser tab. Leave the middleware terminal running.
+Open a second Codespaces terminal with **Terminal > New Terminal**, then collect
+one weather reading:
+
+```bash
+python collect_weather.py
+```
+
+To see the saved readings, use the **Ports** tab, open port `8000`, and add
+`/api/readings` to the forwarded address. Add `/docs` for the interactive API.
+The forwarded port is private by default, so only the signed-in Codespaces user
+can open it.
+
 ## Project files
 
 ```text
